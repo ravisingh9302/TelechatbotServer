@@ -40,7 +40,7 @@ bot.on('message', (message) => {
         const text = message?.text || "";
         const reply = message?.reply_to_message;
         if (text.startsWith("/start")) {
-            bot.sendMessage(chatId, `<b>Welcome to Telegram Web Bot</b> \n You unique chat id is ${chatId} \n Use it to link between the embedded chat and this telegram chat`, { parse_mode: "HTML" })
+            bot.sendMessage(adminId, `<b>Welcome to Telegram Web Bot</b> \n You unique chat id is ${adminId} \n Use it to link between the embedded chat and this telegram chat`, { parse_mode: "HTML" })
         } else if (reply) {
             let replyText = reply.text || "";
             let visitorId = replyText.slice(8, 14);
