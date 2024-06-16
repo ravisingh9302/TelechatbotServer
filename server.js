@@ -5,7 +5,6 @@ const { Server } = require('socket.io')
 const TelegramBot = require('node-telegram-bot-api');
 
 const app = express()
-app.use(express.static('dist', { index: 'demo.html' }))
 app.use(bodyParser.json())
 
 // TELEGRAM BOT instance
@@ -40,7 +39,7 @@ bot.on('message', (message) => {
         const text = message?.text || "";
         const reply = message?.reply_to_message;
         if (text.startsWith("/start")) {
-            bot.sendMessage(adminId, `<b>Welcome to Telegram Web Bot</b> \n You unique chat id is ${adminId} \n Use it to link between the embedded chat and this telegram chat`, { parse_mode: "HTML" })
+            bot.sendMessage(adminId, `<b>Welcome to TelechatBot</b> \nYour unique chat Id is: ${adminId} \nUse this Id link Telegrambot Widget.`, { parse_mode: "HTML" })
         } else if (reply) {
             let replyText = reply.text || "";
             let visitorId = replyText.slice(8, 14);
@@ -49,7 +48,6 @@ bot.on('message', (message) => {
             io.emit(adminId, { name, text, from: 'admin' });
         }
 
-        // res.status(200).json({status:true})
     } catch (e) {
         // re.status(500).json({status:false})
         console.log(e)
