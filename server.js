@@ -38,9 +38,7 @@ bot.on('message', (message) => {
         const name = message?.chat.first_name || message.chat?.title || "admin";
         const text = message?.text || "";
         const reply = message?.reply_to_message;
-        if (text.startsWith("/start")) {
-            bot.sendMessage(adminId, `<b>Welcome to TelechatBot</b> \nYour unique chat Id is: ${adminId} \nUse this Id link Telegrambot Widget.`, { parse_mode: "HTML" })
-        } else if (reply) {
+        if (reply) {
             let replyText = reply.text || "";
             let visitorId = replyText.slice(8, 14);
             io.to(visitorId).emit(visitorId, { name, text, from: 'admin' });
@@ -55,15 +53,19 @@ bot.on('message', (message) => {
 
 });
 
+bot.onText(/\/start/, (msg) => {
+    bot.sendMessage(msg.chat.id, `<b>Welcome to TelechatBot</b> \nYour unique chat Id is: ${msg.chat.id} \nUse this Id link Telegrambot Widget.`, { parse_mode: "HTML" });
+});
+
 
 io.on("connection", (socket) => {
     // console.log('connetion etablish',socket.id)
     let messageReceived = false;
-    let visitor ;
+    let visitor;
     let admin;
     socket.on('register', function (registerMsg) {
         admin = registerMsg.adminId;
-        visitor =registerMsg.visitorId
+        visitor = registerMsg.visitorId
         socket.join(registerMsg.visitorId);
     });
     socket.on('fromvisitor', function (msg) {
@@ -71,7 +73,7 @@ io.on("connection", (socket) => {
         // io.to(msg.visitorId).emit(msg.visitorId+msg.adminId, msg.msg);
         bot.sendMessage(msg.adminId, `Visitor:${msg.visitorId}\nHost:${msg.host}\nMsg:${msg.msg}`, { parse_mode: "HTML" })
     });
-    socket.on('disconnect',  (abcd)=> {
+    socket.on('disconnect', (abcd) => {
         if (messageReceived) {
             bot.sendMessage(admin, `${visitor} Left.`, { parse_mode: "HTML" })
         }
