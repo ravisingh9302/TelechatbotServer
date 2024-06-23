@@ -24,14 +24,14 @@ const io = new Server(appserver, {
     cors: {
         origin: "*",
         credentials: true,
-        transports: ['websocket', 'polling'],
+        transports: ['polling'],
     },
     // path: "/cha",
     // allowEIO3: true
 });
 
 bot.on('message', (message) => {
-    console.log(message)
+    // console.log(message)
     try {
         // const message = req.body.message || req.body.channel_post;
         const adminId = message?.chat.id;
@@ -42,9 +42,13 @@ bot.on('message', (message) => {
             let replyText = reply.text || "";
             let visitorId = replyText.slice(8, 14);
             io.to(visitorId).emit(visitorId, { name, text, from: 'admin' });
+        } else if (text.startsWith("/start")) {
+            return;
         } else if (text) {
             io.emit(adminId, { name, text, from: 'admin' });
+
         }
+
 
     } catch (e) {
         // re.status(500).json({status:false})
